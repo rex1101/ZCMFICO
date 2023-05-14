@@ -1,0 +1,463 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AREAT>Financial document posting group</AREAT>
+   <INCLUDES>
+    <SOBJ_NAME>LZFGCMFIC01F01</SOBJ_NAME>
+    <SOBJ_NAME>LZFGCMFIC01F02</SOBJ_NAME>
+    <SOBJ_NAME>LZFGCMFIC01F03</SOBJ_NAME>
+    <SOBJ_NAME>LZFGCMFIC01F04</SOBJ_NAME>
+    <SOBJ_NAME>LZFGCMFIC01TOP</SOBJ_NAME>
+    <SOBJ_NAME>SAPLZFGCMFIC01</SOBJ_NAME>
+   </INCLUDES>
+   <FUNCTIONS>
+    <item>
+     <FUNCNAME>ZFI_POSTING_DOCUMENT</FUNCNAME>
+     <SHORT_TEXT>Financial document posting</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>ES_CONF</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>ZFI_DOCUMENT_POSTING_CNF</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>ES_EXTRA</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>ZFI_DOCUMENT_POSTING_EXT_FIELD</TYP>
+      </RSIMP>
+     </IMPORT>
+     <EXPORT>
+      <RSEXP>
+       <PARAMETER>I_RETURN</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>ZFI_DOCUMENT_POSTING_EXPORT</TYP>
+      </RSEXP>
+     </EXPORT>
+     <TABLES>
+      <RSTBL>
+       <PARAMETER>T_BBKPF</PARAMETER>
+       <DBSTRUCT>BBKPF</DBSTRUCT>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_BBSEG</PARAMETER>
+       <DBSTRUCT>BBSEG</DBSTRUCT>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_BBTAX</PARAMETER>
+       <DBSTRUCT>BBTAX</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_BWITH</PARAMETER>
+       <DBSTRUCT>BWITH</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_BSELK</PARAMETER>
+       <DBSTRUCT>BSELK</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_BSELP</PARAMETER>
+       <DBSTRUCT>BSELP</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_MESSTAB</PARAMETER>
+       <DBSTRUCT>FIMSG</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_RETURN</PARAMETER>
+       <DBSTRUCT>BAPIRET2</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+     </TABLES>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>ES_CONF</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Financial document posting config</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>ES_EXTRA</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>F-02 Header Screen Enhancement Extra Fields</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>I_RETURN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Financial document return structure</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BBKPF</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Document Header for Accntng Document (Batch Input Structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BBSEG</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Accounting Document Segment (Batch Input Structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BBTAX</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Document Taxes (Batch Input Structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BWITH</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Document-withholding tax information (batch input structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BSELK</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Selection Header Clearing Data (Batch Input Structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BSELP</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Selection Line Items (Batch Input Structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_MESSTAB</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>FI Messages</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_RETURN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Return Parameter</STEXT>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+    <item>
+     <FUNCNAME>ZFI_POSTING_DOCUMENT_BAPI</FUNCNAME>
+     <SHORT_TEXT>Financial document posting(BAPI)</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>ES_CONF</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>ZFI_DOCUMENT_POSTING_CNF</TYP>
+      </RSIMP>
+     </IMPORT>
+     <EXPORT>
+      <RSEXP>
+       <PARAMETER>I_RETURN</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>ZFI_DOCUMENT_POSTING_EXPORT</TYP>
+      </RSEXP>
+     </EXPORT>
+     <TABLES>
+      <RSTBL>
+       <PARAMETER>T_BBKPF</PARAMETER>
+       <DBSTRUCT>BBKPF</DBSTRUCT>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_BBSEG</PARAMETER>
+       <DBSTRUCT>BBSEG</DBSTRUCT>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_EXTENSION2</PARAMETER>
+       <DBSTRUCT>BAPIPAREX</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_RETURN</PARAMETER>
+       <DBSTRUCT>BAPIRET2</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+     </TABLES>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>ES_CONF</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Financial document posting config</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>I_RETURN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Financial document return structure</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BBKPF</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Document Header for Accntng Document (Batch Input Structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BBSEG</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Accounting Document Segment (Batch Input Structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_EXTENSION2</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Ref. structure for BAPI parameter ExtensionIn/ExtensionOut</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_RETURN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Return Parameter</STEXT>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+    <item>
+     <FUNCNAME>ZFI_POSTING_DOCUMENT_BDC</FUNCNAME>
+     <SHORT_TEXT>Financial document posting(BDC)</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>ES_CONF</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>ZFI_DOCUMENT_POSTING_CNF</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>ES_EXTRA</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>ZFI_DOCUMENT_POSTING_EXT_FIELD</TYP>
+      </RSIMP>
+     </IMPORT>
+     <EXPORT>
+      <RSEXP>
+       <PARAMETER>I_RETURN</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>ZFI_DOCUMENT_POSTING_EXPORT</TYP>
+      </RSEXP>
+     </EXPORT>
+     <TABLES>
+      <RSTBL>
+       <PARAMETER>T_BBKPF</PARAMETER>
+       <DBSTRUCT>BBKPF</DBSTRUCT>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_BBSEG</PARAMETER>
+       <DBSTRUCT>BBSEG</DBSTRUCT>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_BBTAX</PARAMETER>
+       <DBSTRUCT>BBTAX</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_BWITH</PARAMETER>
+       <DBSTRUCT>BWITH</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_BSELK</PARAMETER>
+       <DBSTRUCT>BSELK</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_BSELP</PARAMETER>
+       <DBSTRUCT>BSELP</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_MESSTAB</PARAMETER>
+       <DBSTRUCT>FIMSG</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>T_RETURN</PARAMETER>
+       <DBSTRUCT>BAPIRET2</DBSTRUCT>
+       <OPTIONAL>X</OPTIONAL>
+      </RSTBL>
+     </TABLES>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>ES_CONF</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Financial document posting config</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>ES_EXTRA</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>F-02 Header Screen Enhancement Extra Fields</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>I_RETURN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Financial document return structure</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BBKPF</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Document Header for Accntng Document (Batch Input Structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BBSEG</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Accounting Document Segment (Batch Input Structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BBTAX</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Document Taxes (Batch Input Structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BWITH</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Document-withholding tax information (batch input structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BSELK</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Selection Header Clearing Data (Batch Input Structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_BSELP</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Selection Line Items (Batch Input Structure)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_MESSTAB</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>FI Messages</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_RETURN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Return Parameter</STEXT>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+    <item>
+     <FUNCNAME>ZFI_POSTING_PARK_DOCUMENT</FUNCNAME>
+     <SHORT_TEXT>Park Financial doc Document Posting</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>BUKRS</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <REFERENCE>X</REFERENCE>
+       <TYP>VBKPF-BUKRS</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>BELNR</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <REFERENCE>X</REFERENCE>
+       <TYP>VBKPF-BELNR</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>GJAHR</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <REFERENCE>X</REFERENCE>
+       <TYP>VBKPF-GJAHR</TYP>
+      </RSIMP>
+     </IMPORT>
+     <EXPORT>
+      <RSEXP>
+       <PARAMETER>I_RETURN</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>ZFI_DOCUMENT_POSTING_EXPORT</TYP>
+      </RSEXP>
+     </EXPORT>
+     <TABLES>
+      <RSTBL>
+       <PARAMETER>T_RETURN</PARAMETER>
+       <DBSTRUCT>BAPIRET2</DBSTRUCT>
+      </RSTBL>
+     </TABLES>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>BUKRS</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Company Code</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>BELNR</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Accounting Document Number</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>GJAHR</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Fiscal Year</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>I_RETURN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Financial document return structure</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_RETURN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Return Parameter</STEXT>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+    <item>
+     <FUNCNAME>ZFI_REVERSE_POSTING_DOCUMENT</FUNCNAME>
+     <SHORT_TEXT>Rev Financial doc Document Posting</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>BUKRS</PARAMETER>
+       <DEFAULT>&apos;1000&apos;</DEFAULT>
+       <TYP>VBKPF-BUKRS</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>BELNR</PARAMETER>
+       <TYP>VBKPF-BELNR</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>GJAHR</PARAMETER>
+       <DEFAULT>&apos;2022&apos;</DEFAULT>
+       <TYP>VBKPF-GJAHR</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>REASON_REV</PARAMETER>
+       <DEFAULT>&apos;03&apos;</DEFAULT>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>STGRD</TYP>
+      </RSIMP>
+     </IMPORT>
+     <EXPORT>
+      <RSEXP>
+       <PARAMETER>I_RETURN</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>ZFI_DOCUMENT_POSTING_EXPORT</TYP>
+      </RSEXP>
+     </EXPORT>
+     <TABLES>
+      <RSTBL>
+       <PARAMETER>T_RETURN</PARAMETER>
+       <DBSTRUCT>BAPIRET2</DBSTRUCT>
+      </RSTBL>
+     </TABLES>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>BUKRS</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Company Code</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>BELNR</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Accounting Document Number</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>GJAHR</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Fiscal Year</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>REASON_REV</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Reason for Reversal</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>I_RETURN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Financial document return structure</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>T_RETURN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Return Parameter</STEXT>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+   </FUNCTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

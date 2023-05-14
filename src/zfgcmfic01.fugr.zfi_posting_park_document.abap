@@ -1,0 +1,115 @@
+FUNCTION ZFI_POSTING_PARK_DOCUMENT.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(BUKRS) TYPE  VBKPF-BUKRS OPTIONAL
+*"     REFERENCE(BELNR) TYPE  VBKPF-BELNR OPTIONAL
+*"     REFERENCE(GJAHR) TYPE  VBKPF-GJAHR OPTIONAL
+*"  EXPORTING
+*"     REFERENCE(I_RETURN) TYPE  ZFI_DOCUMENT_POSTING_EXPORT
+*"  TABLES
+*"      T_RETURN STRUCTURE  BAPIRET2
+*"----------------------------------------------------------------------
+
+
+  DATA: LT_VBKPF1 TYPE TABLE OF FVBKPF.
+  DATA: LS_VBKPF1 TYPE  FVBKPF.
+  DATA: LT_VBSEC1 TYPE TABLE OF FVBSEC.
+  DATA: LT_VBSEG1 TYPE TABLE OF FVBSEG.
+  DATA: LS_VBSEG1 TYPE FVBSEG.
+  DATA: LT_VBSET1 TYPE TABLE OF FVBSET.
+  DATA: LT_MSG TYPE TABLE OF FIMSG1,
+        LS_MSG TYPE FIMSG1.
+  DATA : LV_CNT TYPE I,               "Message Count
+         LV_ARBGB LIKE SMESG-ARBGB,   "Message ID
+         LV_MSGTY LIKE SMESG-MSGTY.   "Message Type
+
+  CALL FUNCTION 'PRELIMINARY_POSTING_DOC_READ'
+    EXPORTING
+      BELNR                   = BELNR
+      BUKRS                   = BUKRS
+      GJAHR                   = GJAHR
+    TABLES
+      T_VBKPF                 = LT_VBKPF1
+      T_VBSEC                 = LT_VBSEC1
+      T_VBSEG                 = LT_VBSEG1
+      T_VBSET                 = LT_VBSET1
+    EXCEPTIONS                                              "#EC *
+      DOCUMENT_LINE_NOT_FOUND = 1
+      DOCUMENT_NOT_FOUND      = 2
+      INPUT_INCOMPLETE        = 3
+      OTHERS                  = 4.
+
+*// Change Posting Date to Current Date(Required)
+
+  CLEAR:LS_VBKPF1.
+
+  LOOP AT LT_VBKPF1 INTO LS_VBKPF1.
+
+    LS_VBKPF1-BUDAT = SY-DATUM.
+
+    MODIFY LT_VBKPF1 FROM LS_VBKPF1 TRANSPORTING BUDAT.
+
+    CLEAR:LS_VBKPF1.
+
+  ENDLOOP.
+
+  CALL FUNCTION 'PRELIMINARY_POSTING_DOC_WRITE'
+    EXPORTING
+      I_BSTAT = 'U'
+    TABLES
+      T_VBKPF              = LT_VBKPF1
+      T_VBSEC              = LT_VBSEC1
+      T_VBSEG              = LT_VBSEG1
+      T_VBSET              = LT_VBSET1
+    EXCEPTIONS                                              "#EC *
+      ABNORMAL_TERMINATION = 1
+      INSERT_ERROR         = 2
+      UPDATE_ERROR         = 3
+      READ_ERROR           = 4
+      OTHERS               = 5.
+
+
+  CALL FUNCTION 'PRELIMINARY_POSTING_POST_ALL'
+    EXPORTING
+      NOMSG   = 'X'
+    TABLES
+      T_VBKPF = LT_VBKPF1
+      T_MSG   = LT_MSG
+    EXCEPTIONS
+      OTHERS  = 1.
+
+
+*  change bdc msg to bapi starndard return message
+  DATA: BEGIN OF MESSTAB OCCURS 0.
+          INCLUDE STRUCTURE BDCMSGCOLL.
+  DATA: END OF MESSTAB.
+
+  LOOP AT LT_MSG INTO LS_MSG.
+    MOVE-CORRESPONDING LS_MSG TO MESSTAB.
+    MESSTAB-MSGTYP = LS_MSG-MSGTY.
+    MESSTAB-MSGNR = LS_MSG-MSGNO.
+    APPEND MESSTAB.
+    CLEAR:MESSTAB,LS_MSG.
+  ENDLOOP.
+
+  CALL FUNCTION 'CONVERT_BDCMSGCOLL_TO_BAPIRET2'
+    TABLES
+      IMT_BDCMSGCOLL = MESSTAB
+      EXT_RETURN     = T_RETURN.
+
+  LOOP AT T_RETURN.
+    I_RETURN-BELNR = BELNR.
+    I_RETURN-BUKRS = BUKRS.
+    I_RETURN-GJAHR = GJAHR.
+    I_RETURN-TYPE = T_RETURN-TYPE.
+    CONCATENATE T_RETURN-MESSAGE I_RETURN-MESSAGE INTO I_RETURN-MESSAGE.
+  ENDLOOP.
+
+
+
+
+
+
+
+ENDFUNCTION.

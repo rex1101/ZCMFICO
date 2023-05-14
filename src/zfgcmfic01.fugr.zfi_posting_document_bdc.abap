@@ -1,0 +1,132 @@
+FUNCTION ZFI_POSTING_DOCUMENT_BDC.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(ES_CONF) TYPE  ZFI_DOCUMENT_POSTING_CNF
+*"     VALUE(ES_EXTRA) TYPE  ZFI_DOCUMENT_POSTING_EXT_FIELD OPTIONAL
+*"  EXPORTING
+*"     REFERENCE(I_RETURN) TYPE  ZFI_DOCUMENT_POSTING_EXPORT
+*"  TABLES
+*"      T_BBKPF STRUCTURE  BBKPF
+*"      T_BBSEG STRUCTURE  BBSEG
+*"      T_BBTAX STRUCTURE  BBTAX OPTIONAL
+*"      T_BWITH STRUCTURE  BWITH OPTIONAL
+*"      T_BSELK STRUCTURE  BSELK OPTIONAL
+*"      T_BSELP STRUCTURE  BSELP OPTIONAL
+*"      T_MESSTAB STRUCTURE  FIMSG OPTIONAL
+*"      T_RETURN STRUCTURE  BAPIRET2 OPTIONAL
+*"----------------------------------------------------------------------
+
+*&---------------------------------------------------------------------*
+* Function Name     : Z_FI_DOCUMENT_POSTING_BDC
+* Program Purpose  : Z_FI_DOCUMENT_POSTING_BDC
+* Author           : SUN HUIMING
+* Date Written     : 2014/12/04
+* Note             :
+
+*    ADD Enhancement Cover Date at perform FILL_FTPOST_WITH_BBKPF_DATA by Sunhm@20220101
+*    ADD fill ES_EXTRA to F-02 Screen Enhancement at perform FILL_FTPOST_WITH_BBKPF_DATA by Sunhm@20230419
+*&---------------------------------------------------------------------*
+
+*  CLEAR GLOBE VARIABLE
+  PERFORM FRM_CLEAR_GLOBE_VARIABLE.
+  CLEAR: I_RETURN.
+
+  GS_CONF = ES_CONF.
+  GS_EXTRA = ES_EXTRA.
+*
+  PERFORM    CONVERT_AMOUNT TABLES T_BBSEG T_BBTAX T_BWITH .
+* 366 ~ 375 lines copy of 'RFBIBL01' program
+  PERFORM    POST_INIT.
+* 396 ~ 409 lines copy of 'RFBIBL01' program
+  FUNCTION  = GS_CONF-POST_TYPE.
+*  GV_CLR_FL = E_CLR_FL.
+
+  SORT : T_BSELK BY AGKOA,
+         T_BSELP.
+
+* Add inputed T_BBKPF, T_BBSEG, T_BBTAX to TFILE.
+  ANZ_MODE = ES_CONF-BDC_MODE.
+  PERFORM    GET_FIELD_INFO.
+  PERFORM    APPEND_TFILE_FROM_BGR00.
+  PERFORM    APPEND_TFILE_FROM_BBKPF  TABLES T_BBKPF.
+  PERFORM    APPEND_TFILE_FROM_BBSEG  TABLES T_BBSEG.
+  PERFORM    APPEND_TFILE_FROM_BBTAX  TABLES T_BBTAX.
+  PERFORM    APPEND_TFILE_FROM_BWITH  TABLES T_BWITH.
+  PERFORM    APPEND_TFILE_FROM_BSELK  TABLES T_BSELK.
+  PERFORM    APPEND_TFILE_FROM_BSELP  TABLES T_BSELP.
+
+
+* 419 ~ 424 lines copy of 'RFBIBL01' program
+  PERFORM    LOOP_AT_TABLE_TFILE.
+* Prevent part that make batch session
+* PERFORM ERROR_PROCESSING.
+  PERFORM    CALL_BI_CLOSE_ENTRY.
+* MESSAGE APPEND 20041006
+  PERFORM    APPEND_MESSTAB TABLES T_MESSTAB.
+  COMMIT WORK.
+  CALL FUNCTION 'DEQUEUE_ALL'.
+
+* Document Number export
+  I_RETURN-BUKRS = G_BUKRS.  "Company Code
+  I_RETURN-BELNR = G_BELNR.  "Document Number
+  I_RETURN-GJAHR = G_GJAHR.  "Fisical Year
+  IF I_RETURN-BELNR IS INITIAL.
+    I_RETURN-TYPE = 'E'.
+  ELSE.
+    I_RETURN-TYPE = 'S'.
+  ENDIF.
+
+
+
+  CHECK ES_CONF-MESSAGE EQ 'X'.
+  CALL FUNCTION 'MESSAGES_INITIALIZE'.
+  DATA : LV_CNT TYPE I,               "Message Count
+         LV_ARBGB LIKE SMESG-ARBGB,   "Message ID
+         LV_MSGTY LIKE SMESG-MSGTY.   "Message Type
+  LOOP AT T_MESSTAB.
+    LV_ARBGB = T_MESSTAB-MSGID.   "Message ID
+    LV_MSGTY = T_MESSTAB-MSGTY.   "Message Type
+    CALL FUNCTION 'MESSAGE_STORE'
+      EXPORTING
+        ARBGB                  = LV_ARBGB
+        MSGTY                  = LV_MSGTY
+        MSGV1                  = T_MESSTAB-MSGV1
+        MSGV2                  = T_MESSTAB-MSGV2
+        MSGV3                  = T_MESSTAB-MSGV3
+        MSGV4                  = T_MESSTAB-MSGV4
+        TXTNR                  = T_MESSTAB-MSGNO   "Message Number
+        ZEILE                  = LV_CNT
+      EXCEPTIONS
+        MESSAGE_TYPE_NOT_VALID = 1
+        NOT_ACTIVE             = 2
+        OTHERS                 = 3.
+  ENDLOOP.
+
+*  change bdc msg to bapi starndard return message
+  DATA: BEGIN OF MESSTAB OCCURS 0.
+          INCLUDE STRUCTURE BDCMSGCOLL.
+  DATA: END OF MESSTAB.
+
+  LOOP AT T_MESSTAB.
+    MOVE-CORRESPONDING T_MESSTAB TO MESSTAB.
+    MESSTAB-MSGTYP = T_MESSTAB-MSGTY.
+    MESSTAB-MSGNR = T_MESSTAB-MSGNO.
+    APPEND MESSTAB.
+    CLEAR:MESSTAB,T_MESSTAB.
+  ENDLOOP.
+
+  CALL FUNCTION 'CONVERT_BDCMSGCOLL_TO_BAPIRET2'
+    TABLES
+      IMT_BDCMSGCOLL = MESSTAB
+      EXT_RETURN     = T_RETURN.
+
+  LOOP AT T_RETURN.
+    CONCATENATE T_RETURN-MESSAGE I_RETURN-MESSAGE INTO I_RETURN-MESSAGE.
+  ENDLOOP.
+
+
+
+
+
+ENDFUNCTION.
